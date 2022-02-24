@@ -9,8 +9,17 @@ import Button from "components/Button";
 import DayListItem from 'components/DayListItem';
 import DayList from 'components/DayList';
 import InterviewerListItem from 'components/InterviewerListItem';
-import InterviewerList from 'components/InterviewerList'
+import InterviewerList from 'components/InterviewerList'  
+
 import Appointment from 'components/Appointment';
+import Header from 'components/Appointment/Header';
+import Empty from 'components/Appointment/Empty';
+import Show from 'components/Appointment/Show';
+import Confirm from 'components/Appointment/Confirm';
+import Status from 'components/Appointment/Status';
+import Error from 'components/Appointment/Error';
+import Form from 'components/Appointment/Form';
+
 
 storiesOf("Button", module)
   .addParameters({
@@ -72,20 +81,20 @@ storiesOf("DayListItem", module) //Initiates Storybook and registers our DayList
     ));  
     
     
-    const interviewer = {
-      id: 1,
-      name: "Sylvia Palmer",
-      avatar: "https://i.imgur.com/LpaY82x.png"
-    };  
-    
-    const interviewers = [
-      { id: 1, name: "Sylvia Palmer", avatar: "https://i.imgur.com/LpaY82x.png" },
-      { id: 2, name: "Tori Malcolm", avatar: "https://i.imgur.com/Nmx0Qxo.png" },
-      { id: 3, name: "Mildred Nazir", avatar: "https://i.imgur.com/T2WwVfS.png" },
-      { id: 4, name: "Cohana Roy", avatar: "https://i.imgur.com/FK8V841.jpg" },
-      { id: 5, name: "Sven Jones", avatar: "https://i.imgur.com/twYrpay.jpg" }
-    ];
+  const interviewer = {
+    id: 1,
+    name: "Sylvia Palmer",
+    avatar: "https://i.imgur.com/LpaY82x.png"
+  };  
   
+  const interviewers = [
+    { id: 1, name: "Sylvia Palmer", avatar: "https://i.imgur.com/LpaY82x.png" },
+    { id: 2, name: "Tori Malcolm", avatar: "https://i.imgur.com/Nmx0Qxo.png" },
+    { id: 3, name: "Mildred Nazir", avatar: "https://i.imgur.com/T2WwVfS.png" },
+    { id: 4, name: "Cohana Roy", avatar: "https://i.imgur.com/FK8V841.jpg" },
+    { id: 5, name: "Sven Jones", avatar: "https://i.imgur.com/twYrpay.jpg" }
+  ];
+
 
 storiesOf("InterviewerList", module)
   .addParameters({
@@ -107,9 +116,39 @@ storiesOf("InterviewerList", module)
       interviewers={interviewers}
       onChange={action("setInterviewer")}
     />  
-  ));  
-  
+  ));
+
 storiesOf('Appointment', module)
   .addParameters({ backgrounds: [{ name: "white", value: "#fff", default: true }] })
   .add('Appointment renders', () => <Appointment />)
   .add('Appointment with time', () => <Appointment time='12pm' />)
+  .add('Header with time', () => <Header time='12pm' />)
+  .add('Empty', () => <Empty onClick={action('SetDay')} />)
+  .add('Show', () => <Show
+    student="Lydia Miller-Jones"
+    interviewer={interviewer}
+    onEdit={action('edit')}
+    onDelete={action('delete')}
+  />)
+  .add('Confirm', () => <Confirm
+    message="Delete the appointment?"
+    onConfirm={action('confirm')}
+    onCancel={action('cancel')}
+  />)
+  .add('Status', () => <Status message="Deleting" />)
+  .add('Error', () => <Error
+    message='Could not delete appointment'
+    onClose={action('exit')}
+  />)
+  .add('Edit', () => <Form
+    student="Riley Paul"
+    interviewer={3}
+    interviewers={interviewers}
+    onSave={action('save')}
+    onCancel={action('cancel')}
+  />)
+  .add('Create', () => <Form
+    interviewers={interviewers}
+    onSave={action('save')}
+    onCancel={action('cancel')}
+  />)
