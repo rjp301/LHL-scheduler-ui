@@ -26,6 +26,18 @@ export default function useApplicationData() {
     });
   }, []);
 
+  const updateSpots = () => {
+    setState(prev => {
+      const days = prev.days.map(day => {
+        const totalSpots = day.appointments.length;
+        const numAppts = day.appointments.filter(appt => prev.appointments[appt].interview).length;
+        return { ...day, spots: totalSpots - numAppts };
+      })
+
+      return { ...prev, days };
+    });
+  }
+
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
@@ -40,6 +52,7 @@ export default function useApplicationData() {
     const url = `http://localhost:8001/api/appointments/${id}`;
     return axios.put(url, appointment).then(() => {
       setState((prev) => ({ ...prev, appointments }));
+      updateSpots();
     });
   };
 
@@ -61,6 +74,7 @@ export default function useApplicationData() {
     const url = `http://localhost:8001/api/appointments/${id}`;
     return axios.delete(url).then(() => {
       setState({ ...state, appointments });
+      updateSpots();
     });
   };
 
