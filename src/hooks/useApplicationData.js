@@ -27,16 +27,18 @@ export default function useApplicationData() {
   }, []);
 
   const updateSpots = () => {
-    setState(prev => {
-      const days = prev.days.map(day => {
+    setState((prev) => {
+      const days = prev.days.map((day) => {
         const totalSpots = day.appointments.length;
-        const numAppts = day.appointments.filter(appt => prev.appointments[appt].interview).length;
+        const numAppts = day.appointments.filter(
+          (appt) => prev.appointments[appt].interview
+        ).length;
         return { ...day, spots: totalSpots - numAppts };
-      })
+      });
 
       return { ...prev, days };
     });
-  }
+  };
 
   const bookInterview = (id, interview) => {
     const appointment = {

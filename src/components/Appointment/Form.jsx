@@ -13,6 +13,8 @@ export default function Form(props) {
     onError,
   } = props;
 
+  const [error, setError] = useState("");
+
   const interviewId =
     props.interviewer instanceof Object
       ? props.interviewer.id
@@ -28,15 +30,25 @@ export default function Form(props) {
 
   const cancel = () => {
     reset();
+    setError("");
     onCancel();
   };
 
   const save = () => {
     const interview = { student, interviewer };
-    console.log(interview);
     onSave();
     bookInterview(id, interview).then(onSaved).catch(onError);
   };
+  
+  const validate = () => {
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    
+    setError("");
+    return save();
+  }
 
   return (
     <main className="appointment__card appointment__card--create">
@@ -51,6 +63,7 @@ export default function Form(props) {
             onChange={(event) => setStudent(event.target.value)}
           />
         </form>
+        <section className="appointment__validation">{error}</section>
         <InterviewerList
           value={interviewer}
           interviewers={interviewers}
@@ -62,7 +75,7 @@ export default function Form(props) {
           <Button danger onClick={cancel}>
             Cancel
           </Button>
-          <Button confirm onClick={save}>
+          <Button confirm onClick={validate}>
             Save
           </Button>
         </section>
