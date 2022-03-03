@@ -39,16 +39,26 @@ export default function Form(props) {
     onSave();
     bookInterview(id, interview).then(onSaved).catch(onError);
   };
-  
+
   const validate = () => {
+    if (student === "" && interviewer === null) {
+      setError("Must enter student name and interviewer");
+      return;
+    }
+
     if (student === "") {
       setError("Student name cannot be blank");
       return;
     }
-    
+
+    if (interviewer === null) {
+      setError("Must select an interviewer");
+      return;
+    }
+
     setError("");
     return save();
-  }
+  };
 
   return (
     <main className="appointment__card appointment__card--create">

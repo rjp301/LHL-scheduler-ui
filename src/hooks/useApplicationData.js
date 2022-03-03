@@ -1,5 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import 'dotenv/config'
+
+const { REACT_APP_API_URL } = process.env;
 
 export default function useApplicationData() {
   const [state, setState] = useState({
@@ -10,12 +13,12 @@ export default function useApplicationData() {
 
   const setDay = (day) => setState((prev) => ({ ...prev, day }));
 
-  // Intital fetch of data
+  // Intital fetch of data from server
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers"),
+      axios.get(`${REACT_APP_API_URL}/days`),
+      axios.get(`${REACT_APP_API_URL}/appointments`),
+      axios.get(`${REACT_APP_API_URL}/interviewers`),
     ]).then((all) => {
       setState((prev) => ({
         ...prev,
@@ -26,6 +29,7 @@ export default function useApplicationData() {
     });
   }, []);
 
+  // Update appointments remaining in each day
   const updateSpots = () => {
     setState((prev) => {
       const days = prev.days.map((day) => {
@@ -51,7 +55,7 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    const url = `http://localhost:8001/api/appointments/${id}`;
+    const url = `${REACT_APP_API_URL}/appointments/${id}`;
     return axios.put(url, appointment).then(() => {
       setState((prev) => ({ ...prev, appointments }));
       updateSpots();
@@ -73,7 +77,7 @@ export default function useApplicationData() {
     console.log(`Cancelled appointment ${id}`);
 
     // update database
-    const url = `http://localhost:8001/api/appointments/${id}`;
+    const url = `${REACT_APP_API_URL}/appointments/${id}`;
     return axios.delete(url).then(() => {
       setState({ ...state, appointments });
       updateSpots();
